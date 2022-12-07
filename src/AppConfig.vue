@@ -1,8 +1,8 @@
 <template>
 	<div id="layout-config" :class="containerClass">
-		<a class="layout-config-button" id="layout-config-button" @click="toggleConfigurator()">
+		<!-- <a class="layout-config-button" id="layout-config-button" @click="toggleConfigurator()">
 			<i class="pi pi-cog"></i>
-		</a>
+		</a> -->
 		<Button class="p-button-danger layout-config-close p-button-rounded p-button-text" icon="pi pi-times" @click="hideConfigurator()" :style="{'z-index': 1}"></Button>
 
 		<div class="layout-config-content">
@@ -260,17 +260,14 @@ export default {
 			scales: [12,13,14,15,16]
 		}
 	},
-	outsideClickListener: null,
 	themeChangeListener: null,
 	watch: {
 		$route() {
 			if (this.active) {
 				this.active = false;
-				this.unbindOutsideClickListener();
 			}
 		},
 		layoutMode(newValue) {
-			console.log(newValue);
 			this.d_layoutMode = newValue;
 		}
 	},
@@ -287,15 +284,9 @@ export default {
 	methods: {
 		toggleConfigurator() {
 			this.active = !this.active;
-
-			if (this.active)
-				this.bindOutsideClickListener();
-			else
-				this.unbindOutsideClickListener();
 		},
 		hideConfigurator() {
 			this.active = false;
-			this.unbindOutsideClickListener();
 		},
 		changeInputStyle(value) {
 			this.$primevue.config.inputStyle = value;
@@ -306,25 +297,6 @@ export default {
 		changeLayout(event, layoutMode) {
 			this.$emit('layout-change', layoutMode);
 			event.preventDefault();
-		},
-		bindOutsideClickListener() {
-			if (!this.outsideClickListener) {
-				this.outsideClickListener = (event) => {
-					if (this.active && this.isOutsideClicked(event)) {
-						this.active = false;
-					}
-				};
-				document.addEventListener('click', this.outsideClickListener);
-			}
-		},
-		unbindOutsideClickListener() {
-			if (this.outsideClickListener) {
-				document.removeEventListener('click', this.outsideClickListener);
-				this.outsideClickListener = null;
-			}
-		},
-		isOutsideClicked(event) {
-			return !(this.$el.isSameNode(event.target) || this.$el.contains(event.target));
 		},
 		decrementScale() {
 			this.scale--;

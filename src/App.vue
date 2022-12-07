@@ -1,6 +1,6 @@
 <template>
 	<div :class="containerClass" @click="onWrapperClick">
-        <AppTopBar @menu-toggle="onMenuToggle" @sidebar-toggle="onSidebarClick"/>
+        <AppTopBar @menu-toggle="onMenuToggle" @settings-toggle="onSettingsClick"/>
         <div class="layout-sidebar" @click="onSidebarClick">
             <AppMenu :model="menu" @menuitem-click="onMenuItemClick" />
         </div>
@@ -12,7 +12,7 @@
             <AppFooter />
         </div>
 
-		<AppConfig :layoutMode="layoutMode" @layout-change="onLayoutChange" />
+		<AppConfig ref="appConfig" :layoutMode="layoutMode" @layout-change="onLayoutChange" />
         <transition name="layout-mask">
             <div class="layout-mask p-component-overlay" v-if="mobileMenuActive"></div>
         </transition>
@@ -35,9 +35,15 @@ export default {
             mobileMenuActive: false,
             menu : [
                 {
-                    label: 'Home',
+                    label: '主页',
                     items: [{
-                        label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/'
+                        label: '仪表板', icon: 'pi pi-fw pi-home', to: '/'
+                    }]
+                },
+                {
+                    label: '个人设置',
+                    items: [{
+                        label: '基本信息', icon: 'pi pi-fw pi-user-edit', to: '/profile'
                     }]
                 },
 				{
@@ -148,10 +154,10 @@ export default {
             this.menuActive = false;
             this.$toast.removeAllGroups();
         },
-        '$userProfile.value'() {
-            console.log("userProfile in App: ", this.$userProfile.value);
-            this.$userProfile.value ?? this.$router.push({ name: "login" });
-        }
+        // '$userProfile.value'() {
+        //     console.log("userProfile in App: ", this.$userProfile.value);
+        //     this.$userProfile.value ?? this.$router.push({ name: "login" });
+        // }
     },
     methods: {
         onWrapperClick() {
@@ -181,6 +187,9 @@ export default {
             else {
                 this.mobileMenuActive = !this.mobileMenuActive;
             }
+        },
+        onSettingsClick() {
+            this.$refs.appConfig.toggleConfigurator();
         },
         onSidebarClick() {
             this.menuClick = true;
@@ -235,10 +244,6 @@ export default {
         logo() {
             return (this.$appState.darkTheme) ? "images/logo-white.svg" : "images/logo.svg";
         }
-    },
-    beforeCreate() {
-        // handle logging out
-        this.$userProfile.value ?? this.$router.push({ name: 'login' });
     },
     beforeUpdate() {
         if (this.mobileMenuActive)

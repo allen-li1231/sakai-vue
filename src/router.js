@@ -13,6 +13,11 @@ const routes = [
                 component: () => import('./components/Dashboard.vue')
             },
             {
+                path: '/profile',
+                name: 'profile',
+                component: () => import('./components/Profile.vue')
+            },
+            {
                 path: '/formlayout',
                 name: 'formlayout',
                 component: () => import('./components/FormLayoutDemo.vue')
@@ -145,18 +150,6 @@ const routes = [
         path: '/login',
         name: 'login',
         component: () => import('./pages/Login.vue')
-    },
-    {
-        path: '/profile',
-        name: 'profile',
-        component: () => import('./pages/Profile.vue'),
-        children: [
-            {
-                path: '',
-                name: 'profileDetail',
-                component: () => import('./components/ProfileDetail.vue')
-            },
-        ]
     },
     {
         path: '/landing',

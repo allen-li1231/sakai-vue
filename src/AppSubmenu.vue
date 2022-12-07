@@ -28,6 +28,7 @@
 		</template>
 	</ul>
 </template>
+
 <script>
 export default {
 	name: 'appsubmenu',

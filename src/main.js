@@ -5,9 +5,8 @@ import 'prismjs/themes/prism-coy.css';
 import './assets/styles/layout.scss';
 import './assets/demo/flags/flags.css';
 
-
 import {createApp, reactive, ref} from 'vue';
-import axios from 'axios'
+import $api from '@/service/base';
 import router from './router';
 import AppWrapper from './AppWrapper.vue';
 import PrimeVue from 'primevue/config';
@@ -99,39 +98,102 @@ import TriStateCheckbox from 'primevue/tristatecheckbox';
 import CodeHighlight from './AppCodeHighlight';
 import BlockViewer from './BlockViewer';
 
+
 router.beforeEach(function(to, from, next) {
     window.scrollTo(0, 0);
     next();
 });
 
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost:8000/';
-
-let api = axios.create({
-    baseURL: 'http://localhost:8000/sakai/api/',
-    withCredentials: true,
-});
-api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        const statusCode = error.response ? error.response.status : null;
-        if (statusCode === 404) {
-            alert(error)
-            router.push({ name: "notfound" });
-        }
-        else if (statusCode) {
-            alert(error)
-            router.push({ name: "error" });
-        }
-  });
-
 const app = createApp(AppWrapper);
 
 app.config.globalProperties.$appState = reactive({ theme: 'bootstrap4-light-blue', darkTheme: false });
 app.config.globalProperties.$userProfile = ref(null);
-app.config.globalProperties.$api = api;
+app.config.globalProperties.$api = $api;
 
-app.use(PrimeVue, { ripple: true, inputStyle: 'outlined' });
+app.use(PrimeVue, {
+    ripple: true,
+    inputStyle: 'outlined',
+    locale: {
+        startsWith: '开头',
+        contains: '包含',
+        notContains: '不包含',
+        endsWith: '结尾',
+        equals: '等于',
+        notEquals: '不等于',
+        noFilter: '无筛选',
+        lt: '小于',
+        lte: '小于等于',
+        gt: '大于',
+        gte: '大于等于',
+        dateIs: '日期为',
+        dateIsNot: '日期不为',
+        dateBefore: '日期早于',
+        dateAfter: '日期晚于',
+        clear: '清空',
+        apply: '应用',
+        matchAll: '全部匹配',
+        matchAny: '匹配任意',
+        addRule: '添加规则',
+        removeRule: '删除规则',
+        accept: '是',
+        reject: '否',
+        choose: '选择',
+        upload: '上传',
+        cancel: '取消',
+        completed: '已完成',
+        pending: '待办',
+        dayNames: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+        dayNamesShort: ['日', '一', '二', '三', '四', '五', ''],
+        dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+        monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        chooseYear: '选择年',
+        chooseMonth: '选择月',
+        chooseDate: '选择日',
+        prevDecade: '上个十年',
+        nextDecade: '下个十年',
+        prevYear: '前一年',
+        nextYear: '后一年',
+        prevMonth: '前一月',
+        nextMonth: '后一月',
+        prevHour: '前一小时',
+        nextHour: '后一小时',
+        prevMinute: '前一分钟',
+        nextMinute: '后一分钟',
+        prevSecond: '前一秒',
+        nextSecond: '后一秒',
+        am: 'am',
+        pm: 'pm',
+        today: 'Today',
+        weekHeader: 'Wk',
+        firstDayOfWeek: 0,
+        dateFormat: 'yyyy/mm/dd',
+        weak: '弱',
+        medium: '中',
+        strong: '强',
+        passwordPrompt: '请输入密码',
+        emptyFilterMessage: '无结果', // @deprecated Use 'emptySearchMessage' option instead.
+        searchMessage: '共{0}个结果',
+        selectionMessage: '已选择{0}项',
+        emptySelectionMessage: '无选项',
+        emptySearchMessage: '无结果',
+        emptyMessage: '无可用选项',
+        aria: {
+            trueLabel: 'True',
+            falseLabel: 'False',
+            nullLabel: 'Not Selected',
+            star: '1星',
+            stars: '{star}星',
+            selectAll: '已全选',
+            unselectAll: '未选择',
+            close: '关闭',
+            previous: '后退',
+            next: '前进',
+            navigation: '导航',
+            scrollTop: '回到顶部'
+        }
+    }    
+});
 app.use(ConfirmationService);
 app.use(ToastService);
 app.use(router);
@@ -224,3 +286,5 @@ app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('BlockViewer', BlockViewer);
 
 app.mount('#app');
+
+export default app

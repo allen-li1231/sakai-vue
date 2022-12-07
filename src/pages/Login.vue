@@ -13,20 +13,21 @@
                 
                     <div class="w-full md:w-10 mx-auto">
                         <label for="email1" class="block text-900 text-xl font-medium mb-2">用户名</label>
-                        <InputText id="email1" v-model="email" type="text" placeholder="Email" style="padding:1rem;" @blur="validateEmail" v-bind:class="['w-full', 'mb-3', msg['email']? 'p-invalid': '']"/>
+                        <InputText id="email1" v-model="email" type="text" placeholder="Email or Username" style="padding:1rem;" @blur="validateEmail" v-bind:class="['w-full', 'mb-3', msg['email']? 'p-invalid': '']"/>
 						<InlineMessage style="margin-bottom:1rem;" v-if="msg.email">{{msg.email}}</InlineMessage>
 
                         <label for="password1" class="block text-900 font-medium text-xl mb-2">密码</label>
                         <Password id="password1" v-model="password" placeholder="Password"
-                         :toggleMask="true" :feedback="false" @blur="validatePassword" v-bind:class="['w-full', 'mb-3', msg['password']? 'p-invalid': '']"
-                         inputClass="w-full" inputStyle="padding:1rem"></Password>
+                            :toggleMask="true" :feedback="false" @blur="validatePassword" v-bind:class="['w-full', 'mb-3', msg['password']? 'p-invalid': '']"
+                            inputClass="w-full" inputStyle="padding:1rem">
+                        </Password>
                          <InlineMessage style="margin-bottom:1rem;" v-if="msg.password">{{msg.password}}</InlineMessage>
                         <div class="flex align-items-center justify-content-between mb-5">
-                            <div class="flex align-items-center">
+                            <!-- <div class="flex align-items-center">
                                 <Checkbox id="rememberme1" v-model="checked" :binary="true" class="mr-2"></Checkbox>
                                 <label for="rememberme1">记住我</label>
-                            </div>
-                            <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">忘记密码?</a>
+                            </div> -->
+                            <!-- <a class="font-medium no-underline ml-2 text-left cursor-pointer" style="color: var(--primary-color)">忘记密码?</a> -->
                         </div>
                         <Button label="登 录" class="w-full p-3 text-xl" @click="doLogin()"></button>
                     </div>
@@ -37,7 +38,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 import router from '@/router'
 
 export default {
@@ -52,19 +53,19 @@ export default {
     },
     methods: {
         validateEmail() {
-            const group = this.email.match(/^[a-z]+$|(^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,4})+$)/)
+            const group = this.email.match(/^[a-zA-Z0-9]+$|(^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,4})+$)/)
             if (group) {
                 this.msg["email"] = '';
                 this.is_username = group[1]? false: true;
                 return true;
             } else {
-                this.msg["email"] = 'Please enter a valid username or email address';
+                this.msg["email"] = '请输入格式正确的用户名或邮箱';
                 return false;
             }
         },
         validatePassword(){
             if (this.password.length == 0) {
-                this.msg["password"] = 'Please enter password';
+                this.msg["password"] = '请输入密码';
                 return false;
             }
             else {
@@ -76,11 +77,10 @@ export default {
             const self = this;
             if (this.validateEmail() && this.validatePassword()) {
                 // send form data to the server
-                axios.post('/sakai/login/', {
+                this.$api.post('/login/', {
                     [this.is_username? "username": "email"]: this.email,
                     password: this.password
-                },
-                {withCredentials: false})
+                })
                 .then(function (response) {
                     // register global user info
                     self.$userProfile.value = response.data;
@@ -100,7 +100,7 @@ export default {
                 });
             }
         }
-    },
+    }
 }
 </script>
 

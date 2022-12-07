@@ -17,19 +17,25 @@
 			<li>
 				<button class="p-link layout-topbar-button">
 					<i class="pi pi-calendar"></i>
-					<span>Events</span>
+					<span>提醒</span>
 				</button>
 			</li>
 			<li>
 				<button class="p-link layout-topbar-button" @click="onSettingsClick">
 					<i class="pi pi-cog"></i>
-					<span>Settings</span>
+					<span>平台设置</span>
 				</button>
 			</li>
 			<li>
 				<button class="p-link layout-topbar-button"  @click="onProfileClick">
 					<i class="pi pi-user"></i>
-					<span>Profile</span>
+					<span>个人设置</span>
+				</button>
+			</li>
+			<li>
+				<button class="p-link layout-topbar-button"  @click="doLogout">
+					<i class="pi pi-sign-out"></i>
+					<span>退出登录</span>
 				</button>
 			</li>
 		</ul>
@@ -37,6 +43,7 @@
 </template>
 
 <script>
+import userAPI from '@/service/user';
 
 export default {
     methods: {
@@ -47,11 +54,12 @@ export default {
             this.$emit('settings-toggle', event);
         },
 		onProfileClick() {
-            this.$router.push({ name: 'profileDetail'});
+            this.$router.push({ name: 'profile'});
         },
-		onTopbarMenuToggle(event) {
-            this.$emit('topbar-menu-toggle', event);
-        },
+		async doLogout() {
+			await userAPI.doLogout();
+			this.$router.push({ "name": "login" })
+		}
     },
 }
 </script>
