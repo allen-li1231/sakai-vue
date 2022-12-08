@@ -137,8 +137,7 @@ export default {
 						await userAPI.changeUserProfile(this.userProfile);
 						this.$toast.add({severity:'success', summary: '基本信息修改', detail:'修改成功', life: 3000});
 					},
-					reject: () => {
-					}
+					reject: () => {}
 				});
 			}
 		},
@@ -156,16 +155,15 @@ export default {
 						}).then (() => {
 							this.passwordErrorMsg = '';
 							this.$toast.add({severity:'success', summary: '修改成功', detail:'即将进行登出', life: 3000});
+							this.closePasswordChangeDialog()
 							setTimeout(() => {
-								userAPI.logout()
-								this.$router.push({ "name": "login" })
-							}, 3000);
+								this.$router.push({ "name": "login" });
+							}, 1000);
 						}).catch ((error) => {
 							[this.passwordErrorMsg] = error.response.data;
 						})
 					},
-					reject: () => {
-					}
+					reject: () => {}
 				});
 			}
 		}

@@ -36,9 +36,10 @@ export default {
             menu : [
                 {
                     label: '主页',
-                    items: [{
-                        label: '仪表板', icon: 'pi pi-fw pi-home', to: '/'
-                    }]
+                    items: [
+                        {label: '仪表板', icon: 'pi pi-fw pi-home', to: '/'},
+                        {label: '模型概况', icon: 'pi pi-fw pi-table', to: '/model'}
+                ]
                 },
                 {
                     label: '个人设置',
@@ -216,7 +217,7 @@ export default {
                 element.className = element.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         },
         isDesktop() {
-            return window.innerWidth >= 992;
+            return window.innerWidth > 991;
         },
         isSidebarVisible() {
             if (this.isDesktop()) {

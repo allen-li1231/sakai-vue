@@ -10,12 +10,30 @@ const routes = [
             {
                 path: '',
                 name: 'dashboard',
-                component: () => import('./components/Dashboard.vue')
+                component: () => import('@/components/Dashboard.vue')
+            },
+            {
+                path: '/model',
+                name: 'model',
+                component: () => import('@/components/Model.vue'),
+                children: [
+                    {
+                        path: '/model/table',
+                        name: 'modelTable',
+                        component: () => import('@/components/ModelTable.vue')
+
+                    },
+                    {
+                        path: '/model/chart',
+                        name: 'modelChart',
+                        component: () => import('@/components/ModelChart.vue')
+                    },
+                ]
             },
             {
                 path: '/profile',
                 name: 'profile',
-                component: () => import('./components/Profile.vue')
+                component: () => import('@/components/Profile.vue')
             },
             {
                 path: '/formlayout',
